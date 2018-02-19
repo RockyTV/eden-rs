@@ -6,18 +6,20 @@ use character::Character;
 
 #[derive(Debug)]
 pub struct Eden {
-    client: reqwest::Client
+    client: reqwest::Client,
+    endpoint: String
 }
 
 impl Eden {
     pub fn new() -> Self {
         Self {
-            client: reqwest::Client::new()
+            client: reqwest::Client::new(),
+            endpoint: format!("https://esi.tech.ccp.is/latest")
         }
     }
 
-    fn get<U: IntoUrl>(&self, url: U) -> RequestBuilder {
-        self.client.request(Method::Get, url)
+    fn get<U: IntoUrl>(&self, url: U) -> RequestBuilder where U: std::fmt::Display {
+        self.client.request(Method::Get, &format!("{endpoint}/{url}/?datasource=tranquility", endpoint=self.endpoint, url=url))
     }
 
     pub fn character(&self) -> Character {
