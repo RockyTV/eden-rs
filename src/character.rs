@@ -23,7 +23,10 @@ impl Character {
                 match data.json::<serde_json::Value>() {
                     Ok(c) => {
                         Ok(Character {
-                            alliance_id: c["alliance_id"].as_u64().unwrap(),
+                            alliance_id: match c["alliance_id"].as_u64() {
+                                Some(id) => id,
+                                None => Default::default()
+                            },
                             ancestry_id: c["ancestry_id"].as_u64().unwrap(),
                             birthday: c["birthday"].as_str().unwrap().to_string(),
                             bloodline_id: c["bloodline_id"].as_u64().unwrap(),
